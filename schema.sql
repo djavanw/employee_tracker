@@ -20,8 +20,7 @@ DROP TABLE IF EXISTS employee;
 
 CREATE TABLE department (
     d_id INT PRIMARY KEY,
-    dname VARCHAR(30) NOT NULL,
-    PRIMARY KEY (d_id)
+    dname VARCHAR(30) NOT NULL
 );
 
 DROP TABLE IF EXISTS employee;
@@ -31,5 +30,5 @@ CREATE TABLE job (
     title VARCHAR(30) NOT NULL,
     salary DECIMAL(10,2) NOT NULL,
     department_id INT NOT NULL,
-    PRIMARY KEY (j_id)
+    FOREIGN KEY (department_id) REFERENCES department(d_id)
 );
