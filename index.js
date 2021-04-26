@@ -60,19 +60,19 @@ function startQuery() {
                 case "8. View Utilized Budget":
                     viewUtilBud();
                     break;
-                case "Update Employees":
+                case "9. Update Employees":
                     updateEmp();
                     break;
-                case "Update Employee Managers":
+                case "10. Update Employee Managers":
                     updateEmpMan();
                     break;
-                case "Delete Departments":
+                case "11. Delete Departments":
                     deleteDepartments();
                     break;
-                case "Delete Roles":
+                case "12. Delete Roles":
                     deleteRoles();
                     break;
-                case "Delete Employees":
+                case "13. Delete Employees":
                     deleteEmployees();
                     break;
                 case "Exit":
@@ -81,7 +81,7 @@ function startQuery() {
 ;                   
                 default:
                     console.log("A selection must be made or select Exit.");
-                    process.exit(1);
+                    dataConnection.end();
 ;                   
 
             }
@@ -90,5 +90,6 @@ function startQuery() {
 
 dataConnection.connect((err) => {
     if(err) throw err;
+    console.log(`You are connected on id ${dataConnection.threadId}\n`);
     startQuery();
 });
