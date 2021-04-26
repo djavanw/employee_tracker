@@ -16,14 +16,14 @@ CREATE TABLE employee (
     FOREIGN KEY (manager_id) REFERENCES employee(e_id)
 );
 
-DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS department;
 
 CREATE TABLE department (
     d_id INT PRIMARY KEY,
     dname VARCHAR(30) NOT NULL
 );
 
-DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS job;
 
 CREATE TABLE job (
     j_id INT PRIMARY KEY,
