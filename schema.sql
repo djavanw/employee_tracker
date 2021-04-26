@@ -18,7 +18,8 @@ CREATE TABLE job (
     title VARCHAR(30) NOT NULL,
     salary DECIMAL(10,2) NOT NULL,
     department_id INT NOT NULL,
-    FOREIGN KEY (department_id) REFERENCES department(d_id)
+    FOREIGN KEY (department_id) REFERENCES department(d_id) ON
+    DELETE CASCADE ON UPDATE RESTRICT
 );
 
 DROP TABLE IF EXISTS employee;
@@ -29,8 +30,10 @@ CREATE TABLE employee (
     lname VARCHAR(30) NOT NULL,
     role_id INT NOT NULL,
     manager_id INT NULL,
-    FOREIGN KEY (role_id) REFERENCES job(j_id),
-    FOREIGN KEY (manager_id) REFERENCES employee(e_id)
+    FOREIGN KEY (role_id) REFERENCES job(j_id) ON
+    DELETE CASCADE ON UPDATE RESTRICT,
+    FOREIGN KEY (manager_id) REFERENCES employee(e_id) ON
+    DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
