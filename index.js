@@ -9,87 +9,129 @@ const dataConnection = mysql.createConnection ({
     database: "emptracker_db",
 });
 
-function startQuery() {
+//Selections for Views
+
+
+const startQuery = () => {
     inquirer
         .prompt ([
         {
-            type: "list" ,
-            name: "userRespsonse",
+            type: "rawlist" ,
+            name: "userResponse",
             message: "Select an Option Below:",
             choices: [
-                "1. View Departments",
-                "2. View Roles",
-                "3. View Employees",
-                "4. Add Departments",
-                "5. Add roles",
-                "6. Add Employees",
-                "7. View Employees by Manager",
-                "8. View Utilized Budget",
-                "9. Update Employees",
-                "10. Update Employee Managers",
-                "11. Delete Departments",
-                "12. Delete Roles",
-                "13. Delete Employees",
+                "View Departments",
+                "View Roles",
+                "View Employees",
+                "Add Departments",
+                "Add roles",
+                "Add Employees",
+                "View Employees by Manager",
+                "View Utilized Budget",
+                "Update Employees",
+                "Update Employee Managers",
+                "Delete Departments",
+                "Delete Roles",
+                "Delete Employees",
                 "Exit",
                 ],
         }
     ])
         .then((response) => {
-            switch (response.action) {
-                case "1. View Departments":
+            switch (response.userResponse) {
+                case "View Departments":
                     viewDepartments();
                     break;
-                case "2. View Roles":
+                case "View Roles":
                     viewRoles();
                     break;
-                case "3. View Employees":
+                case "View Employees":
                     viewEmployees();
                     break;
-                case "4. Add Departments":
+                case "Add Departments":
                     addDepartments();
                     break;
-                case "5. Add Roles":
+                case "Add Roles":
                     addRoles();
                     break;
-                case "6. Add Employees":
+                case "Add Employees":
                     addEmployees();
                     break;
-                case "7. View Employees by Manager":
+                case "View Employees by Manager":
                     viewEmpMan();
                     break;
-                case "8. View Utilized Budget":
+                case "View Utilized Budget":
                     viewUtilBud();
                     break;
-                case "9. Update Employees":
+                case "Update Employees":
                     updateEmp();
                     break;
-                case "10. Update Employee Managers":
+                case "Update Employee Managers":
                     updateEmpMan();
                     break;
-                case "11. Delete Departments":
+                case "Delete Departments":
                     deleteDepartments();
                     break;
-                case "12. Delete Roles":
+                case "Delete Roles":
                     deleteRoles();
                     break;
-                case "13. Delete Employees":
+                case "Delete Employees":
                     deleteEmployees();
                     break;
                 case "Exit":
                     console.log("Leaving Application");
+                    dataConnection.end();
                     process.exit(1);
-;                   
+                    break;                   
                 default:
                     console.log("A selection must be made or select Exit.");
-                    dataConnection.end();
-;                   
-
+                    break;                   
             }
         });
-}
+};
 
+const viewDepartments = () => {
+    console.log("View of Departments...\n");
+    dataConnection.query("SELECT * FROM department", (err, res) => {
+        if(err) throw err;
+        // console.log(res);
+        console.log("................................");
+        console.log("      List of Departments       ");
+        console.log("................................");
+        console.log("                                ");
+        res.forEach(({ dname }) => {
+        console.log(`${dname}`);
+        });
+        console.log("................................");
+        console.log("                                ");
+        startQuery();
+    });
+};
+
+//Function to view employees
+const viewEmployees = () => {
+    console.log("View of Employees...\n");
+    dataConnection.query("SELECT fname, lname FROM employee", (err, res) => {
+        if(err) throw err;
+        // console.log(res);
+        console.log("................................");
+        console.log("        List of Employees       ");
+        console.log("................................");
+        console.log("                                ");
+        res.forEach(({ fname, lname }) => {
+        console.log(`${fname} ${lname}`);
+        });
+        console.log("................................");
+        console.log("                                ");
+        startQuery();
+    });
+};
+
+//Connection to the DB
 dataConnection.connect((err) => {
     if(err) throw err;
     console.log(`You are connected on id ${dataConnection.threadId}\n`);
     startQuery();
 });
+
+
