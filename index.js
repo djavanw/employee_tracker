@@ -290,6 +290,33 @@ const addEmployee = ()=> {
 //         });
 // };
 
+//Function to view all employees
+const viewAllEmployees = () => {
+    console.log("View of Employees...\n");
+    dataConnection.query(`
+    SELECT employee.e_id, employee.fname, employee.lname, job.title, job.salary, 
+    department.dname, CONCAT(m.fname, " ",m.lname) AS manager
+    FROM employee 
+    LEFT JOIN job ON employee.role_id = job.j_id
+    LEFT JOIN department ON job.department_id = department.d_id
+    LEFT JOIN employee m ON   m.e_id = employee.manager_id
+    ORDER BY employee.e_id`, (err, res) => {
+        if(err) throw err;
+        console.table(res);
+        console.log("................................");
+        console.log("        List of Employees       ");
+        console.log("................................");
+        console.log("                                ");
+        res.forEach(({ e_id, fname, lname, title, salary, dname, manager }) => {
+        console.log(`${e_id}: ${fname} ${lname} | ${title} | ${salary} | ${dname} | ${manager}`);
+        });
+        console.log("................................");
+        console.log("                                ");
+        startQuery();
+    });
+};
+
+//Function to view all departments
 const viewDepartments = () => {
     console.log("View of Departments...\n");
     dataConnection.query("SELECT * FROM department", (err, res) => {
@@ -308,24 +335,7 @@ const viewDepartments = () => {
     });
 };
 
-//Function to view employees
-const viewAllEmployees = () => {
-    console.log("View of Employees...\n");
-    dataConnection.query("SELECT fname, lname FROM employee", (err, res) => {
-        if(err) throw err;
-        // console.log(res);
-        console.log("................................");
-        console.log("        List of Employees       ");
-        console.log("................................");
-        console.log("                                ");
-        res.forEach(({ fname, lname }) => {
-        console.log(`${fname} ${lname}`);
-        });
-        console.log("................................");
-        console.log("                                ");
-        startQuery();
-    });
-};
+
 
 //Connection to the DB
 dataConnection.connect((err) => {
