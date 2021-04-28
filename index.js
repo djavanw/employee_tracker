@@ -11,17 +11,64 @@ const dataConnection = mysql.createConnection ({
 
 //Selections for Views
 const addOptions = {
-    Add_Department: "Allows user to add a department",
-    Add_Employee: "Allows user to add an employee",
-    Add_Role: "Allows user to add a role",
+    Add_Department: "ADD a DEPARTMENT to the database",
+    Add_Employee: "ADD an EMPLOYEE to the database",
+    Add_Role: "ADD a ROLE to the database",
     EXIT: "Exit"   
 };
+
+//These are the first options presented to the user
+const mainOptions = {
+    view_Database: "VIEW Employees, Departments, Roles, or Managers",
+    add_Database: "ADD to different aspects of the database",
+    update_Database: "UPDATE different aspects of the database",
+    delete_Database: "DELETE different aspects of the database",
+    EXIT: "Exit"
+};
+
+const mainStart = () => {
+    inquirer.prompt ({
+        type: "rawlist",
+        name: "response",
+        message: "How would you like to use the Content Management System?",
+        choices: [
+            mainOptions.view_Database,
+            mainOptions.add_Database,
+            mainOptions.update_Database,
+            mainOptions.delete_Database,
+            mainOptions.EXIT,
+        ],
+    })
+    .then((answer) => {
+        switch(answer.response) {
+            case mainOptions.view_Database:
+                mainViewDatabase();
+                break;
+            case mainOptions.add_Database:
+                mainAddDatabase();
+                break; 
+            case mainOptions.update_Database:
+                mainUpdateDatabase();
+                break; 
+            case mainOptions.delete_Database:
+                mainDeleteDatabase();
+                break;
+            case mainOptions.EXIT:
+                process.exit(1);
+                break;        
+        }
+    });
+};
+
+
+
+
 
 const startQuery = () => {
     inquirer.prompt ({
         type: "rawlist",
         name: "action",
-        message: "Select an option to add: ",
+        message: `Select an option to add:`,
         choices: [
             addOptions.Add_Department,
             addOptions.Add_Employee,
@@ -33,17 +80,17 @@ const startQuery = () => {
     .then((answer) => {
         switch (answer.action) {
             case addOptions.Add_Department:
-                addDepartments();
+                addDepartment();
                 break;
             case addOptions.Add_Employee:
-                addEmployees();
+                addEmployee();
                 break;
             case addOptions.Add_Role:
                 addRoles();
                 break;
-            case selectionOptions.EXIT:
-                connection.end();
+            case addOptions.EXIT:
                 process.exit(1);
+                //connection.end();
                 break;
             default:
                 console.log(`Select an action: ${answer.action}`);
@@ -52,8 +99,13 @@ const startQuery = () => {
     });
 };
 
-const addEmployees = ()=> {
+const addEmployee = ()=> {
     inquirer.prompt ([
+        {
+            type: "input",
+            name: "e_id",
+            message: "Enter the id number for the new employee: " 
+        },
         {
             type: "input",
             name: "fname",
@@ -66,38 +118,49 @@ const addEmployees = ()=> {
         },
         {
             type: "input",
-            name: "e_id",
-            message: "Enter the id number for the new employee: " 
-        },
-        {
-            type: "input",
             name: "role_id",
             message: "Enter the role id for the new employee: " 
         },
         {
             type: "input",
             name: "manager_id",
-            message: "Enter the manager id for the new employee: "  
-        }
+            message: "Enter the manager id for the new employee: ",
+            validate: function (input) {
+                if(isNaN(input) === false) {
+                  return true;
+                } else if(isNaN(input) === true) {
+                  console.log("A number needs to be entered");
+                  return false; //make this into a function with a variable "needNumber"
+                }
+              }
+          }   
     ]).then((answer) => {
-        let e_id = answer.e_id;
-        let fname = answer.fname;
-        let lname = answer.lname;
-        let role_id = answer.role_id;
-        let manager_id = answer.manager_id;
-        dataConnection.query(`INSERT INTO employee (e_id, fname, lname, role_id, manager_id) VALUES (${e_id}, ${fname}, ${lname}, ${role_id},${manager_id})`,
-            [
-                e_id, fname, lname, role_id, manager_id
-            ], (err) => {
-                if(err, res) throw err;
-                viewEmployees();
-            })
-    })
+        let values = {e_id: answer.e_id, fname: answer.fname, lname: answer.lname, role_id: answer.role_id, manager_id: answer.manager_id};
+        dataConnection.query("INSERT INTO employee SET ?", values, (err, res) => {
+          if(err) throw err;
+          viewEmployees();
+        });
+       })
 }
 
+//         let e_id = answer.e_id;
+//         let fname = answer.fname;
+//         let lname = answer.lname;
+//         let role_id = answer.role_id;
+//         let manager_id = answer.manager_id;
+//         dataConnection.query(`INSERT INTO employee (e_id, fname, lname, role_id, manager_id) VALUES (${e_id}, ${fname}, ${lname}, ${role_id},${manager_id})`,
+//             [
+//                 e_id, fname, lname, role_id, manager_id
+//             ], (err) => {
+//                 if(err) throw err;
+//                 viewEmployees();
+//             })
+//     })
+// }
 
+/*************************************************************************** */
 
-// const addEmployees = () => {
+// const addEmployee = () => {
 //     console.log(".....Adding an Employee.....\n");
 //     dataConnection.query(
 //         "INSERT INTO employee SET ?",
@@ -111,7 +174,7 @@ const addEmployees = ()=> {
 //         (err, res) => {
 //             if(err) throw err;
 //             console.log(`${res.addedEmployee} Employee Added!\n`);
-//             viewEmployees();
+//             viewEmployee();
 //         }
 //     );
 //     console.log(query.sql);
@@ -236,7 +299,8 @@ const viewEmployees = () => {
 dataConnection.connect((err) => {
     if(err) throw err;
     console.log(`You are connected on id ${dataConnection.threadId}\n`);
-    startQuery();
+    //startQuery();
+    mainStart();
 });
 
 
