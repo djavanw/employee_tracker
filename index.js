@@ -9,7 +9,7 @@ const dataConnection = mysql.createConnection ({
     database: "emptracker_db",
 });
 
-//Selections for Views
+//Selections for Adds
 const addOptions = {
     Add_Department: "ADD a DEPARTMENT to the database",
     Add_Employee: "ADD an EMPLOYEE to the database",
@@ -17,20 +17,21 @@ const addOptions = {
     EXIT: "Exit"   
 };
 
-//These are the first options presented to the user
+//These are the variables for the first options presented to the user
 const mainOptions = {
-    view_Database: "VIEW Employees, Departments, Roles, or Managers",
-    add_Database: "ADD to different aspects of the database",
-    update_Database: "UPDATE different aspects of the database",
-    delete_Database: "DELETE different aspects of the database",
+    view_Database: "VIEW all Employees, VIEW by Department, VIEW by Role, or VIEW by Manager",
+    add_Database: "ADD Employee, Department, or Role",
+    update_Database: "UPDATE Employee Role or Employee Manager",
+    delete_Database: "DELETE Employee, Role, or Department",
     EXIT: "Exit"
 };
 
+//This is the first screen with questions presented to the user
 const mainStart = () => {
     inquirer.prompt ({
         type: "rawlist",
         name: "response",
-        message: "How would you like to use the Content Management System?",
+        message: "How would you like to use the Employee Management System?",
         choices: [
             mainOptions.view_Database,
             mainOptions.add_Database,
@@ -60,7 +61,27 @@ const mainStart = () => {
     });
 };
 
-
+const mainViewDatabase = () => {
+    inquirer.prompt ({
+            type: "rawlist",
+            name: "mainView",
+            message: "What would you like to view?",
+            choices: [
+                "VIEW all Employees",
+                "VIEW by Department",
+                "VIEW by Role",
+                "VIEW by Manager",
+            ],
+        })
+        .then((answer) => {
+            switch (answer.mainView) {
+                case "VIEW all Employees":
+                case "VIEW by Department":
+                case "VIEW by Role":
+                case "VIEW by Manager"  
+            }
+        })
+}
 
 
 
