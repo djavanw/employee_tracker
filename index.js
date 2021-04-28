@@ -71,18 +71,29 @@ const mainViewDatabase = () => {
                 "VIEW by Department",
                 "VIEW by Role",
                 "VIEW by Manager",
+                "EXIT",
             ],
         })
         .then((answer) => {
             switch (answer.mainView) {
                 case "VIEW all Employees":
+                    viewAllEmployees();
+                    break;
                 case "VIEW by Department":
+                    viewDepartments();
+                    break;
                 case "VIEW by Role":
-                case "VIEW by Manager"  
+                    viewRoles();
+                    break;
+                case "VIEW by Manager":
+                    viewMangers();
+                    break;
+                case "EXIT":
+                    process.exit(1);
+                                   
             }
-        })
-}
-
+        });
+};
 
 
 const startQuery = () => {
@@ -159,7 +170,7 @@ const addEmployee = ()=> {
         let values = {e_id: answer.e_id, fname: answer.fname, lname: answer.lname, role_id: answer.role_id, manager_id: answer.manager_id};
         dataConnection.query("INSERT INTO employee SET ?", values, (err, res) => {
           if(err) throw err;
-          viewEmployees();
+          viewAllEmployees();
         });
        })
 }
@@ -298,7 +309,7 @@ const viewDepartments = () => {
 };
 
 //Function to view employees
-const viewEmployees = () => {
+const viewAllEmployees = () => {
     console.log("View of Employees...\n");
     dataConnection.query("SELECT fname, lname FROM employee", (err, res) => {
         if(err) throw err;
