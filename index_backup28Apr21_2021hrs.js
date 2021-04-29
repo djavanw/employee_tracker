@@ -175,6 +175,21 @@ const addEmployee = ()=> {
        })
 }
 
+//         let e_id = answer.e_id;
+//         let fname = answer.fname;
+//         let lname = answer.lname;
+//         let role_id = answer.role_id;
+//         let manager_id = answer.manager_id;
+//         dataConnection.query(`INSERT INTO employee (e_id, fname, lname, role_id, manager_id) VALUES (${e_id}, ${fname}, ${lname}, ${role_id},${manager_id})`,
+//             [
+//                 e_id, fname, lname, role_id, manager_id
+//             ], (err) => {
+//                 if(err) throw err;
+//                 viewEmployees();
+//             })
+//     })
+// }
+
 /*************************************************************************** */
 
 // const addEmployee = () => {
@@ -197,7 +212,83 @@ const addEmployee = ()=> {
 //     console.log(query.sql);
 // };
 
-
+// const startQuery = () => {
+//     inquirer
+//         .prompt ([
+//         {
+//             type: "rawlist" ,
+//             name: "userResponse",
+//             message: "Select an Option Below:",
+//             choices: [
+//                 "View Departments",
+//                 "View Roles",
+//                 "View Employees",
+//                 "Add Departments",
+//                 "Add roles",
+//                 "Add Employees",
+//                 "View Employees by Manager",
+//                 "View Utilized Budget",
+//                 "Update Employees",
+//                 "Update Employee Managers",
+//                 "Delete Departments",
+//                 "Delete Roles",
+//                 "Delete Employees",
+//                 "Exit",
+//                 ],
+//         }
+//     ])
+//         .then((response) => {
+//             switch (response.userResponse) {
+//                 case "View Departments":
+//                     viewDepartments();
+//                     break;
+//                 case "View Roles":
+//                     viewRoles();
+//                     break;
+//                 case "View Employees":
+//                     viewEmployees();
+//                     break;
+//                 case "Add Departments":
+//                     addDepartments();
+//                     break;
+//                 case "Add Roles":
+//                     addRoles();
+//                     break;
+//                 case "Add Employees":
+//                     addEmployees();
+//                     break;
+//                 case "View Employees by Manager":
+//                     viewEmpMan();
+//                     break;
+//                 case "View Utilized Budget":
+//                     viewUtilBud();
+//                     break;
+//                 case "Update Employees":
+//                     updateEmp();
+//                     break;
+//                 case "Update Employee Managers":
+//                     updateEmpMan();
+//                     break;
+//                 case "Delete Departments":
+//                     deleteDepartments();
+//                     break;
+//                 case "Delete Roles":
+//                     deleteRoles();
+//                     break;
+//                 case "Delete Employees":
+//                     deleteEmployees();
+//                     break;
+//                 case "Exit":
+//                     console.log("Leaving Application");
+//                     dataConnection.end();
+//                     process.exit(1);
+//                     break;                   
+//                 default:
+//                     console.log("A selection must be made or select Exit.");
+//                     break;                   
+//             }
+//         });
+// };
 
 //Function to view all employees
 const viewAllEmployees = () => {
@@ -212,134 +303,22 @@ const viewAllEmployees = () => {
     ORDER BY employee.e_id`, (err, res) => {
         if(err) throw err;
         console.table(res);
-        console.log("...............................................");
-        console.log("               List of Employees               ");
-        console.log("...............................................");
-        console.log("                                               ");
+        console.log("................................");
+        console.log("        List of Employees       ");
+        console.log("................................");
+        console.log("                                ");
         res.forEach(({ e_id, fname, lname, title, salary, dname, manager }) => {
-        console.log(`${e_id}:   | ${fname}       ${lname} | ${title}    | ${salary}   |  ${dname}    | ${manager}     `);
+        console.log(`${e_id}: ${fname} ${lname} | ${title} | ${salary} | ${dname} | ${manager}`);
         });
-        console.log("................................................");
-        console.log("                                                ");
-        mainViewDatabase();
+        console.log("................................");
+        console.log("                                ");
+        startQuery();
     });
 };
 
-//Function to view employees by departments
-
+//Function to view all departments
 const viewDepartments = () => {
-    inquirer.prompt ({
-        type: "input",
-        name: "EmpDepartView",
-        message: "Enter the department to view?",
-    })
-    .then((answer) => {
-        const query = `
-        SELECT department.dname as "department", employee.fname as "FirstName", employee.lname as "LastName", employee.e_id as "id"
-        FROM employee
-        LEFT JOIN job ON employee.role_id = job.j_id 
-        LEFT JOIN department ON job.department_id = department.d_id
-        WHERE (department.dname = ? )
-        ORDER BY employee.e_id
-        `;
-        dataConnection.query(query, [answer.EmpDepartView], (err, res) => {
-            if(err) throw err;
-            console.table(res);
-            res.forEach(({ department, FirstName, LastName, id }, i) => {
-            const num = i + 1;   
-            console.log(
-                `${num} Department: ${department} || First Name: ${FirstName} || Last Name: ${LastName} || ID: ${id}`
-              );
-            });
-            mainViewDatabase();
-          });
-        });
-    }
-
-
-// Function to view employees by role
-const viewRoles = () => {
-    inquirer.prompt ({
-        type: "rawlist",
-        name: "EmpRoleView",
-        message: "Select ROLES below",
-        choices: [
-            "Sales Person",
-            "Designer",
-            "Artists",
-            "Accountants",
-            "Resource Manager",
-            "Human Resource Specialist",
-            "EXIT",
-        ]
-    })
-    .then((answer) => {
-        const query = `
-        SELECT job.title as "title", employee.fname as "FirstName", employee.lname as "LastName", employee.e_id as "e_id"
-        FROM job
-        LEFT JOIN employee ON job.j_id = employee.role_id
-        WHERE (job.title = ? )
-        ORDER BY employee.e_id
-        `;
-        dataConnection.query(query, [answer.EmpRoleView], (err, res) => {
-            if(err) throw err;
-            console.table(res);
-            res.forEach(({ title, FirstName, LastName, e_id }, i) => {
-            const num = i + 1;
-            console.log(`Title\t\t\tFirst Name\t\tLast Name\t\tID\t`)   
-            console.log(
-                `${num} Title: ${title} || First Name: ${FirstName} || Last Name: ${LastName} || ID: ${e_id}`
-              );
-            });
-            mainViewDatabase();
-          });
-        });
-    }
-
-// Function to view managers
-const viewMangers = () => {
-    console.log("View of Managers...\n");
-    dataConnection.query(`
-    SELECT employee.fname AS "FirstName", employee.lname AS "LastName", job.title AS "Title"
-    FROM employee
-    INNER JOIN job ON  employee.role_id = job.j_id
-    WHERE job.title LIKE "%$ Supervisor%" ESCAPE "$"
-    ORDER BY job.title`, (err, res) => {
-        if(err) throw err;
-        console.table(res);
-        console.log("...............................................");
-        console.log("               List of Managers              ");
-        console.log("...............................................");
-        console.log("                                               ");
-        res.forEach(({ FirstName, LastName, Title }) => {
-        console.log(`${FirstName}:   | ${LastName}       ${Title}    `);
-        });
-        console.log("................................................");
-        console.log("                                                ");
-        mainViewDatabase();
-    });
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const viewDepartmentsXX = () => {
-    console.log("View of Employees by Departments...\n");
+    console.log("View of Departments...\n");
     dataConnection.query("SELECT * FROM department", (err, res) => {
         if(err) throw err;
         // console.log(res);
@@ -352,7 +331,7 @@ const viewDepartmentsXX = () => {
         });
         console.log("................................");
         console.log("                                ");
-        mainViewDatabase();
+        startQuery();
     });
 };
 
