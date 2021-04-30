@@ -1,9 +1,9 @@
 USE emptracker_db;
 
-INSERT INTO department (d_id, dname) VALUES 
-(10,"Sales"),
-(15,"Marketing"),
-(20,"Entertainment"),
-(25,"Accounting"),
-(30,"Logistics"),
-(35,"Administration");
+INSERT INTO department (dname) VALUES 
+("Sales"),
+("Marketing"),
+("Entertainment"),
+("Accounting"),
+("Logistics"),
+("Administration");

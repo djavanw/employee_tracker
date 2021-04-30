@@ -7,14 +7,14 @@ USE emptracker_db;
 DROP TABLE IF EXISTS department;
 
 CREATE TABLE department (
-    d_id INT PRIMARY KEY,
+    d_id INT AUTO_INCREMENT PRIMARY KEY,
     dname VARCHAR(30) NOT NULL
 );
 
 DROP TABLE IF EXISTS job;
 
 CREATE TABLE job (
-    j_id INT PRIMARY KEY,
+    j_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL(10,2) NOT NULL,
     department_id INT NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE job (
 DROP TABLE IF EXISTS employee;
 
 CREATE TABLE employee (
-    e_id INT PRIMARY KEY,
+    e_id INT AUTO_INCREMENT PRIMARY KEY,
     fname VARCHAR(30) NOT NULL,
     lname VARCHAR(30) NOT NULL,
     role_id INT NOT NULL,
