@@ -586,37 +586,36 @@ const addRole = () => {
 
 // Function to UPDATE employee role  [UPDATE]
 const updateEmployeeRole = () => {
-    dataConnection.query("SELECT * FROM job", (err, employeeData3) => {
-        const employeeName1 = employeeData3.map(job => {
+    dataConnection.query("SELECT e_id FROM employee", (err, employeeData3) => {
+        const employeeName1 = employeeData3.map(employee => {
             return {
-                name: job.title,
-                value: job.j_id
+                name: employee.lname,
+                value: employee.e_id
             }
         });   
-        dataConnection.query("SELECT * FROM employee", (err, employeeData4) => {
-            const employeeRole2 = employeeData4.map(employee => {
+        dataConnection.query("SELECT * FROM job", (err, employeeData4) => {
+            const employeeRole2 = employeeData4.map(job => {
                 return {
-                    name: employee.lname,
-                    value: employee.e_id
+                    name: job.title,
+                    value: job.j_id
                 }
             });
             inquirer.prompt([
                 {
                     type: "list",
-                    name: "j_id",
-                    message: "Select the updated role: ",
+                    name: "daName",
+                    message: "Select the employee to update: ",
                     choices: employeeName1
-                },   
+                },
                 {
                     type: "list",
-                    name: "thaname",
-                    message: "Select the employee to update: ",
+                    name: "jobRole",
+                    message: "Select the updated role: ",
                     choices: employeeRole2
-                },
-            
+                }
             ]).then((answer) => {
-                let values = { j_id: answer.j_id, thaname: answer.thaname  };
-                dataConnection.query(`UPDATE employee SET role_id = ? WHERE e_id = ?`, values, (err, res) => {
+                let values = { jobRole: answer.jobRole, daName: answer.daName  };
+                dataConnection.query("UPDATE employee SET role_id=? WHERE e_id=?", values, (err, res) => {
                     if(err) throw err;
                     mainViewDatabase();
                 });
