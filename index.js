@@ -612,7 +612,7 @@ const updateEmployeeRole = () => {
                 },
             
             ]).then((answer) => {
-                let values = { employee_id: answer.employee.id, job_id: answer.job_id };
+                let values = [{role_id: answer.job_id }, { id: answer.employee_id }];
                 dataConnection.query('UPDATE employee SET ? WHERE ?', values, (err, res) => {
                     if(err) throw err;
                     mainViewDatabase();
