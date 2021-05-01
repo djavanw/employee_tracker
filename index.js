@@ -1,7 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const bodyParser = require("body-parser");
-//app.use(bodyParser.urlencoded({ extended: false }));
+
 
 const dataConnection = mysql.createConnection({
     host: "localhost",
@@ -51,8 +50,8 @@ const mainStart = () => {
                     mainAddDatabase();
                     break;
                 case mainOptions.update_Database:
-                    updateEmployeeRole();
-                    //mainUpdateDatabase();
+                    //updateEmployeeRole();
+                    mainUpdateDatabase();
                     break;
                 case mainOptions.delete_Database:
                     mainDeleteDatabase();
@@ -75,7 +74,7 @@ const mainViewDatabase = () => {
             "VIEW Departments",
             "VIEW Roles",
             "VIEW Managers",
-            "Go Back to Veiw Menu",
+            "Go Back to MAIN Menu",
             "EXIT",
         ],
     })
@@ -93,7 +92,7 @@ const mainViewDatabase = () => {
                 case "VIEW Managers":
                     viewMangers();
                     break;
-                case "Go Back to Veiw Menu":
+                case "Go Back to MAIN Menu":
                     mainStart();
                     break;
                case "EXIT":
@@ -133,7 +132,7 @@ const mainAddDatabase = () => {
                 case "ADD a Manager":
                     addMangers();
                     break;
-                case "Go Back to Veiw Menu":
+                case "Go Back to View Menu":
                     mainViewDatabase();
                     break;
                 case "EXIT":
@@ -144,24 +143,41 @@ const mainAddDatabase = () => {
 };
 
 
-// //Main prompts to start adds
-// const mainUpdateDatabase = () => {
-//     inquirer.prompt({
-//         type: "input",
-//         name: "mainUpdate",
-//         message: "What employee by ID needs a ROLE updated?",
-//     })
-//         .then((answer) => {
-//             switch (answer.mainUpdate) {
-//                 case "UPDATE employee id":
-//                     updateEmployeeRole();
-//                     break;
-//                 case "EXIT":
-//                     process.exit(1);
+//Main prompts to start updates
+const mainUpdateDatabase = () => {
+    inquirer.prompt({
+        type: "rawlist",
+        name: "mainUpdate",
+        message: "What would you like to update?",
+        choices: [
+            "UPDATE Employee Role",
+            "UPDATE Employee Manager",
+            "Go Back to Veiw Menu",
+            "Go Back to MAIN Menu",
+            "EXIT",
+        ]
+    })
+        .then((answer) => {
+            switch (answer.mainUpdate) {
+                case "UPDATE Employee Role":
+                    updateEmployeeRole();
+                    break;
+                case "UPDATE Employee Manager":
+                    updateEmployeeManager();
+                    break;
+                case "Go Back to Veiw Menu":
+                    mainViewDatabase();
+                    break;
+                case "Go Back to MAIN Menu":
+                    mainStart();
+                    break;
 
-//             }
-//         });
-// };
+
+                case "EXIT":
+                    process.exit(1);
+            }
+        });
+};
 
 
 
