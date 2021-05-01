@@ -1,8 +1,7 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-require("console.table");
-let table = require("table");
-
+const bodyParser = require("body-parser");
+//app.use(bodyParser.urlencoded({ extended: false }));
 
 const dataConnection = mysql.createConnection({
     host: "localhost",
@@ -145,24 +144,24 @@ const mainAddDatabase = () => {
 };
 
 
-//Main prompts to start adds
-const mainUpdateDatabase = () => {
-    inquirer.prompt({
-        type: "input",
-        name: "mainUpdate",
-        message: "What employee by ID needs a ROLE updated?",
-    })
-        .then((answer) => {
-            switch (answer.mainUpdate) {
-                case "UPDATE employee id":
-                    updateEmployeeRole();
-                    break;
-                case "EXIT":
-                    process.exit(1);
+// //Main prompts to start adds
+// const mainUpdateDatabase = () => {
+//     inquirer.prompt({
+//         type: "input",
+//         name: "mainUpdate",
+//         message: "What employee by ID needs a ROLE updated?",
+//     })
+//         .then((answer) => {
+//             switch (answer.mainUpdate) {
+//                 case "UPDATE employee id":
+//                     updateEmployeeRole();
+//                     break;
+//                 case "EXIT":
+//                     process.exit(1);
 
-            }
-        });
-};
+//             }
+//         });
+// };
 
 
 
@@ -224,7 +223,7 @@ const mainUpdateDatabase = () => {
 //     dataConnection.query(
 //         "INSERT INTO employee SET ?",
 //         {
-//             e_id: 445,
+//             id: 445,
 //             fname: "William",
 //             lname: "Smith",
 //             role_id: 200,
@@ -245,21 +244,21 @@ const mainUpdateDatabase = () => {
 const viewAllEmployees = () => {
     console.log("View of Employees........................................\n");
     dataConnection.query(`
-    SELECT employee.e_id, employee.fname, employee.lname, job.title, job.salary, 
+    SELECT employee.id, employee.fname, employee.lname, job.title, job.salary, 
     department.dname, CONCAT(m.fname, " ",m.lname) AS manager
     FROM employee 
-    LEFT JOIN job ON employee.role_id = job.j_id
-    LEFT JOIN department ON job.department_id = department.d_id
-    LEFT JOIN employee m ON   m.e_id = employee.manager_id
-    ORDER BY employee.e_id`, (err, res) => {
+    LEFT JOIN job ON employee.role_id = job.id
+    LEFT JOIN department ON job.department_id = department.id
+    LEFT JOIN employee m ON   m.id = employee.manager_id
+    ORDER BY employee.id`, (err, res) => {
         if (err) throw err;
         console.table(res);
         // console.log("...............................................");
         // console.log("               List of Employees               ");
         // console.log("...............................................");
         // console.log("                                               ");
-        // res.forEach(({ e_id, fname, lname, title, salary, dname, manager }) => {
-        // console.log(`${e_id}:   | ${fname}       ${lname} | ${title}    | ${salary}   |  ${dname}    | ${manager}     `);
+        // res.forEach(({ id, fname, lname, title, salary, dname, manager }) => {
+        // console.log(`${id}:   | ${fname}       ${lname} | ${title}    | ${salary}   |  ${dname}    | ${manager}     `);
         // });
         // console.log("................................................");
         // console.log("                                                ");
@@ -271,7 +270,7 @@ const viewAllEmployees = () => {
 const viewDepartments = () => {
     console.log("View of Departments..........................................\n");
     dataConnection.query(`
-    SELECT department.d_id, department.dname
+    SELECT department.id, department.dname
     FROM department
     ORDER BY department.dname`, (err, res) => {
         if (err) throw err;
@@ -280,8 +279,8 @@ const viewDepartments = () => {
         console.log("               List of Departments               ");
         console.log(".................................................");
         console.log("                                                 ");
-        res.forEach(({ d_id, dname }) => {
-        console.log(`${d_id}:  |  ${dname}: `);
+        res.forEach(({ id, dname }) => {
+        console.log(`${id}:  |  ${dname}: `);
         });
         console.log("..................................................");
         console.log("                                                  ");
@@ -293,17 +292,17 @@ const viewDepartments = () => {
 const viewRoles = () => {
     console.log("View of Roles..........................................\n");
     dataConnection.query(`
-    SELECT job.j_id, job.title, job.salary, job.department_id
+    SELECT job.id, job.title, job.salary, job.department_id
     FROM job
-    ORDER BY job.j_id`, (err, res) => {
+    ORDER BY job.id`, (err, res) => {
         if (err) throw err;
         console.table(res);
         console.log(".................................................");
         console.log("                  List of Roles                  ");
         console.log(".................................................");
         console.log("                                                 ");
-        res.forEach(({ j_id, title, salary, department_id }) => {
-        console.log(`${j_id}: \t  |  ${title}: \t\t\t | ${salary}: \t  | ${department_id}: \t`);
+        res.forEach(({ id, title, salary, department_id }) => {
+        console.log(`${id}: \t  |  ${title}: \t\t\t | ${salary}: \t  | ${department_id}: \t`);
         });
         console.log(".................................................");
         console.log("                                                 ");
@@ -317,7 +316,7 @@ const viewMangers = () => {
     dataConnection.query(`
     SELECT employee.fname AS "FirstName", employee.lname AS "LastName", job.title AS "Title"
     FROM employee
-    INNER JOIN job ON  employee.role_id = job.j_id
+    INNER JOIN job ON  employee.role_id = job.id
     WHERE job.title LIKE "%$ Supervisor%" ESCAPE "$"
     ORDER BY job.title`, (err, res) => {
         if (err) throw err;
@@ -446,14 +445,14 @@ const addEmployee = () => {
         const employee1 = employeeData1.map(job => {
             return {
                 name: job.title,
-                value: job.j_id
+                value: job.id
             }
         });
         dataConnection.query("SELECT * FROM job", (err, employeeData2) => {
             const employee2 = employeeData2.map(job => {
                 return {
                     name: job.title,
-                    value: job.j_id
+                    value: job.id
                 }
             });
             inquirer.prompt([
@@ -527,7 +526,7 @@ const addRole = () => {
         const departments = departmentData.map(department => {
             return {
                 name: department.dname,
-                value: department.d_id
+                value: department.id
             }
         })
 
@@ -561,40 +560,60 @@ const addRole = () => {
 }
 
 
+/************************************************************************************************************************************ */
+//Function to Update an employee' role [UPDATE]
+// const updateEmployeeRole = () => {
+//     dataConnection.query("SELECT * FROM job"), (err, empdata) => {
+//         const jobs = empdata.map(job => {
+//             return {
+//                 name: job.title,
+//                 value: job.id
+//             }
+//         });
+//     }   dataConnection.query("")
+// }
 
-// Function to UPDATE employee role  [UPDATE]
+
+
+
+
+
+
+
+
+// Function to UPDATE employee role  [UPDATE]  placed a 2 after the name
 const updateEmployeeRole = () => {
-    dataConnection.query("SELECT * FROM job", (err, employeeData3) => {
-        const employeeName1 = employeeData3.map(job => {
+    dataConnection.query("SELECT * FROM employee", (err, empData) => {
+        const employees = empData.map(employee => {
             return {
-                name: job.title,
-                value: job.j_id
+                name: employee.lname,
+                value: employee.id
             }
         });   
-        dataConnection.query("SELECT * FROM employee", (err, employeeData4) => {
-            const employeeRole2 = employeeData4.map(employee => {
+        dataConnection.query("SELECT * FROM job", (err, jobData1) => {
+            const jobs = jobData1.map(job => {
                 return {
-                    name: employee.lname,
-                    value: employee.e_id
+                    name: job.title,
+                    value: job.id
                 }
             });
             inquirer.prompt([
                 {
                     type: "list",
-                    name: "j_id",
-                    message: "Select the updated role: ",
-                    choices: employeeName1
+                    name: "employee_id",
+                    message: "Select the employee to update: ",
+                    choices: employees
                 },   
                 {
                     type: "list",
-                    name: "thaname",
-                    message: "Select the employee to update: ",
-                    choices: employeeRole2
+                    name: "job_id",
+                    message: "Select updated role,: ",
+                    choices: jobs
                 },
             
             ]).then((answer) => {
-                let values = { j_id: answer.j_id, thaname: answer.thaname  };
-                dataConnection.query(`UPDATE employee SET role_id = ? WHERE e_id = ?`, values, (err, res) => {
+                let values = { employee_id: answer.employee.id, job_id: answer.job_id };
+                dataConnection.query('UPDATE employee SET ? WHERE ?', values, (err, res) => {
                     if(err) throw err;
                     mainViewDatabase();
                 });
@@ -614,7 +633,7 @@ const updateEmployeeRole = () => {
 //         },
 //         {
 //             type: "input",
-//             name: "e_id",
+//             name: "id",
 //             message: "Enter the employee's id number: "
 //         },
 
@@ -622,26 +641,26 @@ const updateEmployeeRole = () => {
 //         let query = `
 //             UPDATE employee
 //             SET role_id = ?
-//             WHERE e_id = ? 
+//             WHERE id = ? 
 //             `;
 //         //Disected the example from https://www.mysqltutorial.org/mysql-nodejs/update/ [Updating data example]
-//         let data = [answer.role_id, answer.e_id];
+//         let data = [answer.role_id, answer.id];
 //         dataConnection.query(query, data, (err, res, fields) => {
 //             if (err) throw err;
 //             //console.table(res);
 //             console.log("Rows Affected: ", res.affectedRows);
-//             console.log(`|| Emp ID: ${answer.e_id} || New Role ID: ${answer.role_id} ||`);
-//             //`Role ID: ${role_id} || ${fname} || ${lname} || ${e_id}`); 
+//             console.log(`|| Emp ID: ${answer.id} || New Role ID: ${answer.role_id} ||`);
+//             //`Role ID: ${role_id} || ${fname} || ${lname} || ${id}`); 
 //             mainViewDatabase();
 //         });
 //     });
 // }
 
-// res.forEach(({ title, FirstName, LastName, e_id }, i) => {
+// res.forEach(({ title, FirstName, LastName, id }, i) => {
 //     const num = i + 1;
 //     console.log(`Title\t\t\tFirst Name\t\tLast Name\t\tID\t`)   
 //     console.log(
-//         `${num} Title: ${title} || First Name: ${FirstName} || Last Name: ${LastName} || ID: ${e_id}`
+//         `${num} Title: ${title} || First Name: ${FirstName} || Last Name: ${LastName} || ID: ${id}`
 //       );
 //     });
 

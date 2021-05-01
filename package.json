@@ -17,9 +17,8 @@
   },
   "homepage": "https://github.com/djavanw/employee_tracker#readme",
   "dependencies": {
-    "console.table": "^0.10.0",
+    "body-parser": "^1.19.0",
     "inquirer": "^8.0.0",
-    "mysql": "^2.18.1",
-    "table": "^6.6.0"
+    "mysql": "^2.18.1"
   }
 }

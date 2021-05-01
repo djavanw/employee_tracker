@@ -5,7 +5,7 @@ USE emptracker_db;
 /*Managers*/
 INSERT INTO employee (fname, lname, role_id) VALUES 
 ("Kevin","Saurer",2),
-("Donald","Cornelius,",4),
+("Donald","Cornelius",4),
 ("Claude","VonStroke",6),
 ("Emilia","Clarke",8),
 ("Jeffery","Morgan",10);
