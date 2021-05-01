@@ -2,29 +2,6 @@ const mysql = require("mysql");
 const inquirer = require("inquirer");
 require("console.table");
 let table = require("table");
-let tdata, config;
-
-tdata = [
-    ["A","B","C","D","E","F"]
-],
-
-config = {
-    columns: {
-        0: {
-          width: 1   // Column 0 of width 1
-        },
-        1: {
-          width: 20  // Column 1 of width 20
-        },
-        2: {
-          width: 5   // Column 2 of width 5
-        }
-      }
-    };
-    let x = table.table(tdata, config);
-console.log(x)
-
-
 
 const dataConnection = mysql.createConnection({
     host: "localhost",
