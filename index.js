@@ -142,7 +142,6 @@ const mainAddDatabase = () => {
         });
 };
 
-
 //Main prompts to start updates
 const mainUpdateDatabase = () => {
     inquirer.prompt({
@@ -254,21 +253,24 @@ const mainUpdateDatabase = () => {
 //     console.log(query.sql);
 // };
 
-
-
 //Function to view all employees [VIEW]
 const viewAllEmployees = () => {
     console.log("View of Employees........................................\n");
     dataConnection.query(`
-    SELECT employee.id, employee.fname, employee.lname, job.title, job.salary, 
-    department.dname, CONCAT(m.fname, " ",m.lname) AS manager
+    SELECT employee.id AS "ID", employee.fname AS "First Name", employee.lname AS "Last Name", job.title AS "Title", job.salary AS "Salary", 
+    department.dname AS "Dept. Name", CONCAT(m.fname, " ",m.lname) AS "Manager"
     FROM employee 
     LEFT JOIN job ON employee.role_id = job.id
     LEFT JOIN department ON job.department_id = department.id
-    LEFT JOIN employee m ON   m.id = employee.manager_id
+    LEFT JOIN employee m ON m.id = employee.manager_id
     ORDER BY employee.id`, (err, res) => {
         if (err) throw err;
+        console.log("...................................................................................................");
+        console.log("                                       List of Employees                                           ");
+        console.log("...................................................................................................");
         console.table(res);
+        console.log("...................................................................................................");
+        console.log("                                                                                                   ");
         // console.log("...............................................");
         // console.log("               List of Employees               ");
         // console.log("...............................................");
@@ -279,73 +281,82 @@ const viewAllEmployees = () => {
         // console.log("................................................");
         // console.log("                                                ");
         mainViewDatabase();
+        
     });
+    
 };
+
+
 
 //Function to VIEW Departments  [VIEW]
 const viewDepartments = () => {
-    console.log("View of Departments..........................................\n");
     dataConnection.query(`
-    SELECT department.id, department.dname
+    SELECT department.id AS "ID", department.dname AS "Name"
     FROM department
-    ORDER BY department.dname`, (err, res) => {
+    ORDER BY department.id`, (err, res) => {
         if (err) throw err;
-        console.table(res);
+        
         console.log(".................................................");
         console.log("               List of Departments               ");
         console.log(".................................................");
+        console.table(res);
+        console.log(".................................................");
         console.log("                                                 ");
-        res.forEach(({ id, dname }) => {
-        console.log(`${id}:  |  ${dname}: `);
-        });
-        console.log("..................................................");
-        console.log("                                                  ");
+        // Use this ForEach Loop if console.table was not allowed.
+        // console.log(".................................................");
+        // console.log("               List of Departments               ");
+        // res.forEach(({ id, dname }) => {
+        // console.log(`${id}:  |  ${dname}: `);
+        // });
         mainViewDatabase();
     });
 };
 
 //Function to VIEW Roles  [VIEW]
 const viewRoles = () => {
-    console.log("View of Roles..........................................\n");
     dataConnection.query(`
-    SELECT job.id, job.title, job.salary, job.department_id
+    SELECT job.id AS "ID", job.title AS "Title", job.salary AS "Salary", job.department_id AS "Department ID"
     FROM job
     ORDER BY job.id`, (err, res) => {
         if (err) throw err;
+
+        console.log(".....................................................");
+        console.log("                  List of Roles                      ");
+        console.log(".....................................................");
         console.table(res);
-        console.log(".................................................");
-        console.log("                  List of Roles                  ");
-        console.log(".................................................");
-        console.log("                                                 ");
-        res.forEach(({ id, title, salary, department_id }) => {
-        console.log(`${id}: \t  |  ${title}: \t\t\t | ${salary}: \t  | ${department_id}: \t`);
-        });
-        console.log(".................................................");
-        console.log("                                                 ");
+        console.log(".....................................................");
+        console.log("                                                     ");
+        // Use this ForEach Loop if console.table was not allowed.
+        // console.log(".....................................................");
+        // console.log("                  List of Roles                      ");
+        // res.forEach(({ id, title, salary, department_id }) => {
+        // console.log(`${id}: \t  |  ${title}: \t\t\t | ${salary}: \t\t\t  | ${department_id}: \t`);
+        // });
         mainViewDatabase();
     });
 };
 
 // Function to View Managers [VIEW]
 const viewMangers = () => {
-    console.log("View of Managers.....................................\n");
     dataConnection.query(`
-    SELECT employee.fname AS "FirstName", employee.lname AS "LastName", job.title AS "Title"
+    SELECT employee.fname AS "First Name", employee.lname AS "Last Name", job.title AS "Title"
     FROM employee
     INNER JOIN job ON  employee.role_id = job.id
     WHERE job.title LIKE "%$ Supervisor%" ESCAPE "$"
     ORDER BY job.title`, (err, res) => {
         if (err) throw err;
-        console.table(res);
+
         console.log("................................................");
         console.log("               List of Managers                 ");
         console.log("................................................");
+        console.table(res);
         console.log("                                                ");
-        res.forEach(({ FirstName, LastName, Title }) => {
-            console.log(`${FirstName}:   | ${LastName}       ${Title}    `);
-        });
-        console.log("................................................");
-        console.log("                                                ");
+        // Use this ForEach Loop if console.table was not allowed.
+        // console.log("................................................");
+        // console.log("               List of Managers                 ");
+        // res.forEach(({ FirstName, LastName, Title }) => {
+        //     console.log(`${FirstName}:   | ${LastName}       ${Title}    `);
+        // });
         mainViewDatabase();
     });
 };
@@ -448,13 +459,6 @@ const viewMangers = () => {
 
 
 
-
-
-
-
-
-
-
 //Function to add an employee [ADD EMPLOYEE]
 const addEmployee = () => {
     dataConnection.query("SELECT * FROM job", (err, employeeData1) => {
@@ -534,7 +538,8 @@ const addDepartment = () => {
             mainViewDatabase();
         });
     })
-}
+};
+
 
 //Function to add role [ADD ROLE]
 const addRole = () => {
@@ -576,28 +581,7 @@ const addRole = () => {
 }
 
 
-/************************************************************************************************************************************ */
-//Function to Update an employee' role [UPDATE]
-// const updateEmployeeRole = () => {
-//     dataConnection.query("SELECT * FROM job"), (err, empdata) => {
-//         const jobs = empdata.map(job => {
-//             return {
-//                 name: job.title,
-//                 value: job.id
-//             }
-//         });
-//     }   dataConnection.query("")
-// }
-
-
-
-
-
-
-
-
-
-// Function to UPDATE employee role  [UPDATE]  placed a 2 after the name
+// Function to UPDATE Employee Role  [UPDATE]  
 const updateEmployeeRole = () => {
     dataConnection.query("SELECT * FROM employee", (err, empData) => {
         const employees = empData.map(employee => {
@@ -623,7 +607,7 @@ const updateEmployeeRole = () => {
                 {
                     type: "list",
                     name: "job_id",
-                    message: "Select updated role,: ",
+                    message: "Select updated role: ",
                     choices: jobs
                 },
             
@@ -637,8 +621,87 @@ const updateEmployeeRole = () => {
         })
     })
 };
-    
 
+/************************************************************************************************************* */
+// Function to UPDATE Employee Manager  [UPDATE]  
+const updateEmployeeManager = () => {
+    dataConnection.query("SELECT * FROM employee WHERE id >= '6'", (err, empData) => {
+        const employees = empData.map(employee => {
+            return {
+                name: employee.lname,
+                value: employee.id
+            }
+        });   
+        dataConnection.query(`SELECT * FROM employee WHERE (role_id = 2) OR  (role_id = 4) 
+            OR (role_id = 6) OR (role_id = 8) OR (role_id = 10)`, (err, managerData) => {
+            const managers = managerData.map(employee => {
+                return {
+                    name: employee.lname,
+                    value: employee.id
+                }
+            });
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "employee_id",
+                    message: "Select the employee to for Manager update: ",
+                    choices: employees
+                },   
+                {
+                    type: "rawlist",
+                    name: "employee.lname",
+                    message: "Select updated Manager: ",
+                    choices: managers
+                },
+            
+            ]).then((answer) => {
+                let values = [{ manager_id: answer.employee.lname }, { id: answer.employee_id }];
+                dataConnection.query('UPDATE employee SET ? WHERE ?', values, (err, res) => {
+                    if(err) throw err;
+                    mainViewDatabase();
+                });
+            })
+        })
+    })
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/************************************************************************************************************* */
 //Function to update employee role [Update ROLE]******************************************************
 // const updateEmployeeRole = () => {
 //     inquirer.prompt([
