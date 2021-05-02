@@ -10,32 +10,44 @@
 ***
   ## Table of Contents:
   1.  [Description](#description)
-  2.  [Installation](#installation)
-  3.  [Screenshots](#screenshots)
-  4.  [Usage](#usage)
-  5.  [License](#license)
-  6.  [Contributing](#contributing)
-  7.  [Tests](#tests)
-  8.  [Questions](#questions)
+  2.  [Demonstration](#demonstration)
+  3.  [Installation](#installation)
+  4.  [Screenshots](#screenshots)
+  5.  [Technologies](#technologies)
+  6.  [Usage](#usage)
+  7.  [License](#license)
+  8.  [Contributing](#contributing)
+  9.  [Tests](#tests)
+  10.  [Questions](#questions)
+
+***
+  ## Demonstration:
+  [Deployed Application](https://youtu.be/chaSdIWa4Sk)
 
 ***
   ## Installation:
-  None right now.
+  To use this application, the user can fork or clone.  Then `npm i mysql, inquirer, an console.table`.  This needs to be executed on Node.js.
 
 ***
   ## Screenshots:
-  ### (Application Deployed on Heroku)
-  ![Application_Deployed](./public/assets/images/)
+  ### (Application Deployed Bash)
+  ![Application_Deployed](./images/application_menu.JPG)
 
-  ### (Entering Notes)
-  ![Some Data](./public/assets/images/)
+  ### (View of Employees)
+  ![Viewing Employees](./images/employee_view.JPG)
 
-  ### (Deleting Notes)
-  ![Some Data](./public/assets/images/)
+  ### (Viewing Roles)
+  ![Viewing Roles](./images/view_of_roles.JPG)
 
 ***
+  ## Technologies
+    - Node.js
+    - MySQL
+    - Inquirer
+    - Console.table
+
   ## Usage:
-  Look at the description and revise.
+  This application can be used to manage employees in a business or small organization.
    
 ***
   ## License:
@@ -50,9 +62,9 @@
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   ## Contributing:
-  The contributors for this project are: D. Javan Worthy.
+  To contribute to this project, please send an email.  
   <br>
-  D. Javan Worthy.
+  The contributors for this project are: D. Javan Worthy.
 
 ***
   ## Tests:
